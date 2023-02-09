@@ -35,3 +35,21 @@ jobs:
         path: build.tar
         retention-days: 4
     
+  Test:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: "install dependencies"
+      run: sudo apt install libeigen3-dev libboost-all-dev libyaml-cpp-dev -y
+    - name: "download build artifact"
+      uses: actions/download-artifact@v2
+      with:
+        name: artifact-build
+    - name: "extract build.tar"
+      run: tar -xvf build.tar
+    - name: "run tests"
+      working-directory: build
+      run: ctest
+
+    
