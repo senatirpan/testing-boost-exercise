@@ -12,3 +12,26 @@ jobs:
     - name: "Check the whether all cpp and hpp files are formatted correctly"
       run: clang-format --dry-run -Werror src/*.hpp src/*.cpp tests/*.cpp
   
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: "install dependencies"
+      run: sudo apt install libeigen3-dev libboost-all-dev libyaml-cpp-dev -y
+    - name: "create build folder"
+      run: mkdir build
+    - name: "go to build folder"
+      working-directory: ./build
+      run: cmake ..
+    - name: "make"
+      working-directory: ./build
+      run: make -j
+    - name: "compress build folder"
+      run: tar -cvf build.tar ./build
+    - name: "upload build artifact"
+      uses: actions/upload-artifact@v2
+      with:
+        name: artifact-build
+        path: build.tar
+        retention-days: 4
+    
