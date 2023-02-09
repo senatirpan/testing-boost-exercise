@@ -1,0 +1,15 @@
+name: CI/CD
+
+on: [push]
+
+jobs:
+  Style:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: "Install clang-format"
+      run: sudo apt install clang-format -y
+    - name: "Check the whether all cpp and hpp files are formatted correctly"
+      run: clang-format --dry-run -Werror src/*.hpp src/*.cpp tests/*.cpp
+  Build:
+  Tests:
